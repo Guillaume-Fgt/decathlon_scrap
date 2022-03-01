@@ -1,0 +1,6 @@
+.venv/
+.pytest_cache/
+geckodriver.log
+decathlon_scrap/__pycache__/
+tests/__pycache__/
+
