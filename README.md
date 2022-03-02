@@ -12,6 +12,5 @@ Files:
 - stocks_scrap: selenium part of the scrapping (because a button had to be clicked). The functions inside this module are called from Steamlit interface.
 - decathlon_scrap.py: Streamlit web app. Run it using "Streamlit run decathlon_scrap.py" command in the directory.
 
-
-
+![Animation](https://user-images.githubusercontent.com/66461774/156323899-2bcf364e-d461-4b86-b642-ab241bf2adab.gif)
 
