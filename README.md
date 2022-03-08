@@ -14,3 +14,20 @@ Files:
 
 ![Animation](https://user-images.githubusercontent.com/66461774/156323899-2bcf364e-d461-4b86-b642-ab241bf2adab.gif)
 
+How to use it:
+
+clone the repo:
+```
+git clone https://github.com/Guillaume-Fgt/decathlon_scrap.git
+```
+Navigate to the clone directory and use [poetry](https://python-poetry.org/docs/) to install dependencies:
+```
+poetry install
+```
+
+
+
+Activate the virtual environment created and run streamlit:
+```
+streamlit run decathlon_scrap\decathlon_scrap.py
+```
