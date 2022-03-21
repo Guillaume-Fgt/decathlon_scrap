@@ -7,7 +7,7 @@ Then display the content on a webapp using Streamlit.
 
 Files:
 
-- create_db : to create the database and the table
+- db_operations : to create the database and the table
 - populate db: beautiful soup scrap of the website. Populate bike_name, bike_price and bike_url columns.
 - stocks_scrap: selenium part of the scrapping (because a button had to be clicked). The functions inside this module are called from Steamlit interface.
 - decathlon_scrap.py: Streamlit web app. Run it using "Streamlit run decathlon_scrap.py" command in the directory.
