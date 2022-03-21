@@ -1,16 +1,16 @@
-import sqlite3
 import requests
 from bs4 import BeautifulSoup
 import config
+from db_operations import populate_database
 
 """
 Use Beautiful Soup to populate columns bike_name, price and url_bike of the database
 """
 
 
-def scrap_prices_bike():
-    urls = [config.URL]
-    headers = config.HEADERS
+def scrap_bike(
+    urls: list[str], headers: dict
+) -> tuple[list[str], list[str], list[str]]:
     velos_list = []
     prix_velos_list = []
     links_velo_list = []
@@ -29,26 +29,10 @@ def scrap_prices_bike():
     return (velos_list, prix_velos_list, links_velo_list)
 
 
-def populate_db():
-    velos, prix, links = scrap_prices_bike()
-
-    path = config.DB_PATH
-    connection = sqlite3.connect(path)
-    cursor = connection.cursor()
-
-    for ind, velo in enumerate(velos):
-        cursor.execute(
-            "INSERT INTO bike (bike_name, price, bike_link) VALUES (?, ?, ?)",
-            (
-                velo,
-                prix[ind],
-                links[ind],
-            ),
-        )
-
-    connection.commit()
-    connection.close()
+def main() -> None:
+    velos, prix, links = scrap_bike(config.URLS, config.HEADERS)
+    populate_database(config.DB_PATH, velos, prix, links)
 
 
 if __name__ == "__main__":
-    populate_db()
+    main()

@@ -1,6 +1,9 @@
 DB_PATH = "decathlon_scrap/data/app.db"
 
-URL = "https://www.decathlon.fr/browse/c0-tous-les-sports/c1-velo-route/c3-velos-gravel/_/N-dh1pfs"
+
+URLS = [
+    "https://www.decathlon.fr/browse/c0-tous-les-sports/c1-velo-route/c3-velos-gravel/_/N-dh1pfs"
+]
 
 HEADERS = {
     "User-Agent": (

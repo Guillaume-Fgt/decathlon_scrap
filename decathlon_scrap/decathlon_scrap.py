@@ -1,95 +1,82 @@
 import streamlit as st
-import sqlite3
 from datetime import datetime
 import stocks_scrap
 import config
+from db_operations import open_db
 
 st.title("Decathlon gravel bikes stocks*")
 col1, col2 = st.columns(2)
 col1 = st.caption("* N/A = size doesn't exist")
 
 st.sidebar.title("Filters")
-
-
-def connect_database(database):
-    connection = sqlite3.connect(database)
-    connection.row_factory = (
-        sqlite3.Row
-    )  # to use the name of the columns instead of index
-    return connection.cursor(), connection
-
-
-path = config.DB_PATH
-cursor, connection = connect_database(path)
-
-
-# filter only avalaible
 dispo = st.sidebar.checkbox("Only available ones")
-#
 
-if dispo:
-    data = cursor.execute(
+
+with open_db(config.DB_PATH) as cursor:
+    if dispo:
+        data = cursor.execute(
+            """
+            SELECT *
+            FROM bike
+            WHERE XXS LIKE ? OR XS LIKE ? OR S LIKE ? OR M LIKE ? OR L LIKE ? OR XL LIKE ?
+        """,
+            (
+                "En stock%",
+                "En stock%",
+                "En stock%",
+                "En stock%",
+                "En stock%",
+                "En stock%",
+            ),
+        )
+    else:
+        data = cursor.execute(
+            """
+            SELECT *
+            FROM bike 
         """
-        SELECT *
-        FROM bike
-        WHERE XXS LIKE ? OR XS LIKE ? OR S LIKE ? OR M LIKE ? OR L LIKE ? OR XL LIKE ?
-    """,
-        ("En stock%", "En stock%", "En stock%", "En stock%", "En stock%", "En stock%"),
-    )
-else:
-    data = cursor.execute(
-        """
-        SELECT *
-        FROM bike 
-    """
-    )
-#
-data_fetched = data.fetchall()
-connection.close()
+        )
+    data_fetched = data.fetchall()
 
 # prices slider
-prices = []
-for data_price in data_fetched:
-    prices.append(data_price["price"])
-
+prices = [data_price["price"] for data_price in data_fetched]
 prix = st.sidebar.slider("Price filter (€)", value=[0, max(prices)])
 #
 
 # # Number of bike corresponding to filter price
-cursor, connection = connect_database(path)
-if dispo:
-    data = cursor.execute(
-        """
-        SELECT COUNT(id)
-        FROM bike
-        WHERE (price >=? AND price <=?) AND (XXS LIKE ? OR XS LIKE ? OR S LIKE ? OR M LIKE ? OR L LIKE ? OR XL LIKE ?)
-        """,
-        (
-            prix[0],
-            prix[1],
-            "En stock%",
-            "En stock%",
-            "En stock%",
-            "En stock%",
-            "En stock%",
-            "En stock%",
-        ),
-    )
-else:
-    data = cursor.execute(
-        """
-        SELECT COUNT(id)
-        FROM bike
-        WHERE price >=? AND price <=?
-        """,
-        (
-            prix[0],
-            prix[1],
-        ),
-    )
-st.sidebar.caption(f"{data.fetchone()[0]} bikes meet criterias")
-connection.close()
-# #
+with open_db(config.DB_PATH) as cursor:
+    if dispo:
+        data = cursor.execute(
+            """
+            SELECT COUNT(id)
+            FROM bike
+            WHERE (price >=? AND price <=?) AND (XXS LIKE ? OR XS LIKE ? OR S LIKE ? OR M LIKE ? OR L LIKE ? OR XL LIKE ?)
+            """,
+            (
+                prix[0],
+                prix[1],
+                "En stock%",
+                "En stock%",
+                "En stock%",
+                "En stock%",
+                "En stock%",
+                "En stock%",
+            ),
+        )
+    else:
+        data = cursor.execute(
+            """
+            SELECT COUNT(id)
+            FROM bike
+            WHERE price >=? AND price <=?
+            """,
+            (
+                prix[0],
+                prix[1],
+            ),
+        )
+    st.sidebar.caption(f"{data.fetchone()[0]} bikes meet criterias")
+
 
 for data_one in data_fetched:
     if prix[0] <= data_one["price"] <= prix[1]:
