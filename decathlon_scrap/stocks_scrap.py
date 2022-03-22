@@ -35,8 +35,8 @@ def find_and_click_button(
     WebDriverWait(driver, timeout).until(
         EC.element_to_be_clickable((locator, webelement))
     )
-    cookie_accept = driver.find_element(locator, webelement)
-    cookie_accept.click()
+    button = driver.find_element(locator, webelement)
+    button.click()
 
 
 @contextmanager
